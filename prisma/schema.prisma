@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Agents {
+  id          String        @id @default(cuid())
+  nom         String
+  prenom      String
+  mdp         String
+  telephone   String
+  statut      String
+  id_fonction String
+  email       String        @unique
+  pharmacie   Pharmacices[]
+}
+
+model Pharmacices {
+  id           String     @id @default(cuid())
+  nom          String
+  idcommune    String
+  communeavenu String
+  id_quartier  String
+  id_user      String
+  image        String
+  idville      String
+  idpays       String
+  Produits     Produits[]
+  agentsId     String?
+
+  qurtier Quartier? @relation(fields: [id_quartier], references: [id])
+  agents  Agents?   @relation(fields: [agentsId], references: [id])
+  commune Commune?  @relation(fields: [idcommune], references: [id])
+  pays    Pays?     @relation(fields: [idpays], references: [id])
+  villes  Villes?   @relation(fields: [idville], references: [id])
+}
+
+model Produits {
+  id           String      @id @default(cuid())
+  nom          String
+  dosage       String
+  prix         String
+  description  String      @db.Text
+  id_pharmacie String
+  pharmacie    Pharmacices @relation(fields: [id_pharmacie], references: [id])
+}
+
+model Pays {
+  id          String        @id @default(cuid())
+  nom         String
+  Villes      Villes[]
+  Pharmacices Pharmacices[]
+}
+
+model Villes {
+  id      String @id @default(cuid())
+  nom     String
+  id_pays String
+
+  pays        Pays          @relation(fields: [id_pays], references: [id])
+  Commune     Commune[]
+  Pharmacices Pharmacices[]
+}
+
+model Commune {
+  id       String @id @default(cuid())
+  nom      String
+  id_ville String
+
+  pays        Villes        @relation(fields: [id_ville], references: [id])
+  paysId      String?
+  Quartier    Quartier[]
+  Pharmacices Pharmacices[]
+}
+
+model Quartier {
+  id         String @id @default(cuid())
+  nom        String
+  id_commune String
+
+  commune     Commune       @relation(fields: [id_commune], references: [id])
+  paysId      String?
+  Pharmacices Pharmacices[]
+}
+
+model Slider {
+  id  String @id @default(cuid())
+  nom String
+}
