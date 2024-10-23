@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { AgentInterface } from 'src/dto/agent.dto';
 import { PrismaService } from 'src/prisma.service';
 import { hash, compare } from 'bcrypt';
@@ -73,6 +73,14 @@ export class AgentService {
 
 
   async create(dataall: AgentInterface) {
+    const existeEmail = await this.prismaservice.agents.findUnique({
+      where: {
+        email: dataall.email,
+      },
+    });
+    if (!existeEmail) {
+      throw new HttpException("Email existe déjà !", HttpStatus.CONFLICT);
+    }
     const hashedPassword = await this.hasPassword(dataall.mdp);
     const createAgent = await this.prismaservice.agents.create({
       data: {

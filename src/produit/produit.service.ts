@@ -12,8 +12,14 @@ export class ProduitService {
         id : "desc"
       },
       include : {
-         pharmacie : true,
+        pharmacie : {
+          include : {
+            agents : true,
+            commune : true,
+          }
+        },
       }
+      
     });
     return { data: getall };
   }
@@ -23,6 +29,14 @@ export class ProduitService {
       where: {
         id,
       },
+      include : {
+        pharmacie : {
+          include : {
+            agents : true,
+            commune : true,
+          }
+        },
+      }
     });
     return { data: getid };
   }
@@ -85,19 +99,27 @@ export class ProduitService {
         id_pharmacie : id,
       },
       include : {
-        pharmacie : true,
+        pharmacie : {
+          include : {
+            agents : true,
+            commune : true,
+          }
+        },
       }
     });
     return { data: getid };
   }
 
-  async update({ id, ...agentUpdate }: { id: string } & ProduitDto) {
+  async update({ id, nom, dosage, prix,  description }: { id: string; nom: string, dosage: string, prix : string, description:string  }) {
     const updatedAgent = await this.prismaservice.produits.update({
       where: {
         id,
       },
       data: {
-        ...agentUpdate,
+        nom : nom,
+        dosage : dosage,
+        prix : prix,
+        description : description
       },
     });
     return updatedAgent;

@@ -43,8 +43,10 @@ export class ProduitController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  update(@Param('id') id: string, @Body() agentUpdate: ProduitDto) {
-    return this.allservice.update({ id, ...agentUpdate });
+  update(@Param('id') id: string, @Body() body: { nom: string, dosage: string, prix : string, description:string }) {
+    const { nom, dosage, prix,  description } = body;
+    console.log(id);
+    return this.allservice.update({ id, nom, dosage, prix,  description});
   }
 
   @UseGuards(JwtAuthGuard)

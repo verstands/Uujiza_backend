@@ -50,9 +50,12 @@ export class PharmacieController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() agentUpdate: PharmacieDto) {
-    return this.allservice.update({ id, ...agentUpdate });
+  update(@Param('id') id: string, @Body() body: { nom: string, communeavenu: string }) {
+    const { nom, communeavenu } = body;
+    console.log(id);
+    return this.allservice.update({ id, nom, communeavenu });
   }
+  
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')

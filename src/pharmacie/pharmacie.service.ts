@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PharmacieDto } from 'src/dto/pharmaciedto';
 import { PrismaService } from 'src/prisma.service';
 
@@ -78,23 +78,31 @@ export class PharmacieService {
         }
       },
       include  :{
-        pharmacie : true
+        pharmacie : {
+          include : {
+            agents : true,
+            commune :true
+          }
+        }
       }
     });
     return { data: getid };
   }
 
-  async update({ id, ...agentUpdate }: { id: string } & PharmacieDto) {
-    const updatedAgent = await this.prismaservice.pharmacices.update({
+  async update({ id, nom, communeavenu }: { id: string; nom: string; communeavenu: string }) {
+    const updatedPharmacie = await this.prismaservice.pharmacices.update({
       where: {
-        id,
+        id,  
       },
       data: {
-        ...agentUpdate,
+        nom: nom, 
+        communeavenu: communeavenu,
       },
     });
-    return updatedAgent;
+  
+    return { message: 'Pharmacie modifiée avec succès' }; 
   }
+  
 
   async delete({ id }: { id: string }) {
     await this.prismaservice.pharmacices.delete({
@@ -106,9 +114,20 @@ export class PharmacieService {
   }
 
   async create(dataall: PharmacieDto) {
-    const createAgent = await this.prismaservice.pharmacices.create({
-      data: dataall
+    const pharmacies = await this.prismaservice.pharmacices.findMany({
+      where: {
+        agentsId: dataall.agentsId, 
+      },
     });
-    return createAgent; 
+    if (pharmacies.length > 0) {
+      throw new HttpException("Vous avez déjà une pharmacie !", HttpStatus.CONFLICT);
+    }
+    const createAgent = await this.prismaservice.pharmacices.create({
+      data: dataall,
+    });
+  
+    return createAgent;  
   }
+  
+  
 }

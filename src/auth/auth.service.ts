@@ -22,7 +22,7 @@ export class AuthService {
     });
 
     if (!existeEmail) {
-      throw new HttpException("Email n'existe pas", HttpStatus.CONFLICT);
+      throw new HttpException("Email existe deja", HttpStatus.CONFLICT);
     }
     const isPasswordValide = await this.isPasswordValide(
       authBody.password,
