@@ -95,5 +95,5 @@ model Quartier {
 
 model Slider {
   id  String @id @default(cuid())
-  nom String
+  file String
 }

@@ -16,11 +16,13 @@ async function bootstrap() {
     credentials: true,
   });
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
+  
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
   const loggingService = app.get(LoggingService);
   app.useGlobalInterceptors(new LoggingInterceptor(loggingService));
-  
+  app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
+
   const port = 4001;
   await app.listen(port);
 }

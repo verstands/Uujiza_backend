@@ -32,8 +32,9 @@ export class AgentController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  updateAgent(@Param('id') id: string, @Body() agentUpdate: AgentInterface) {
-    return this.agentService.updateAgent({ id, ...agentUpdate });
+  update(@Param('id') id: string, @Body() body: { nom: string, prenom: string, email : string, telephone:string }) {
+    const { nom, prenom, email,  telephone } = body;
+    return this.agentService.updateAgent({ id, nom, prenom, email, telephone });
   }
 
   @UseGuards(JwtAuthGuard)

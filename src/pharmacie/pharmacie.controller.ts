@@ -55,7 +55,16 @@ export class PharmacieController {
     console.log(id);
     return this.allservice.update({ id, nom, communeavenu });
   }
+
+  @Put('activer/activer/:id')
+  updateActiver(@Param('id') id: string) {
+    return this.allservice.activer({ id });
+  }
   
+  @Put('desactiver/desactiver/:id')
+  updateDesactiver(@Param('id') id: string) {
+    return this.allservice.desactiver({ id });
+  }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')

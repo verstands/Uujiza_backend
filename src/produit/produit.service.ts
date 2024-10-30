@@ -90,7 +90,25 @@ export class ProduitService {
   }
   
   
-  
+  async getFindMedicamentQuartier({ id }: { id: string }) {
+    const getid = await this.prismaservice.produits.findMany({
+      where: {
+        pharmacie : {
+          id_quartier : id
+        },
+      },
+      include : {
+        pharmacie : {
+          include : {
+            agents : true,
+            commune : true,
+          }
+        },
+      }
+    });
+    console.log(getid)
+    return { data: getid };
+  }
 
 
   async getFindPharmacie({ id }: { id: string }) {

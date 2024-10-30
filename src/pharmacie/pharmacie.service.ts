@@ -50,6 +50,14 @@ export class PharmacieService {
       where: {
         id_quartier: id,
       },
+      include: {
+        qurtier: true,
+        commune : true,
+        villes : true,
+        pays : true,
+        agents : true
+      }
+
     });
     return { data: getid };
   }
@@ -127,6 +135,32 @@ export class PharmacieService {
     });
   
     return createAgent;  
+  }
+
+  async activer({ id }: { id: string}) {
+    const updatedPharmacie = await this.prismaservice.pharmacices.update({
+      where: {
+        id,  
+      },
+      data: {
+        id_user: "1", 
+      },
+    });
+  
+    return { message: 'Pharmacie a été activé' }; 
+  }
+
+  async desactiver({ id }: { id: string}) {
+    const updatedPharmacie = await this.prismaservice.pharmacices.update({
+      where: {
+        id,  
+      },
+      data: {
+        id_user: "0", 
+      },
+    });
+  
+    return { message: 'Pharmacie a été desactivé' }; 
   }
   
   

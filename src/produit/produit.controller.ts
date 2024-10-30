@@ -20,6 +20,14 @@ export class ProduitController {
     });
   }
 
+  @Get('produitcommune/:id')
+  getFindMedicamentQuartier(@Param('id') id: string) {
+    console.log("iiiiid",id)
+    return this.allservice.getFindMedicamentQuartier({
+      id,
+    });
+  }
+
   @Get('/countmedicament/:id')
   getCountMedicament(@Param('id') id: string) {
     return this.allservice.getCountMedicament({

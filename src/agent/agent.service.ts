@@ -34,13 +34,16 @@ export class AgentService {
     return { data: agent };
   }
 
-  async updateAgent({ id, ...agentUpdate }: { id: string } & AgentInterface) {
+  async updateAgent({ id, nom, prenom, email, telephone  }: { id: string, nom : string, prenom : string, email: string, telephone : string }) {
     const updatedAgent = await this.prismaservice.agents.update({
       where: {
         id,
       },
       data: {
-        ...agentUpdate,
+        nom : nom,
+        prenom : prenom,
+        email : email,
+        telephone : telephone
       },
     });
     return updatedAgent;
@@ -78,7 +81,7 @@ export class AgentService {
         email: dataall.email,
       },
     });
-    if (!existeEmail) {
+    if (existeEmail) {
       throw new HttpException("Email existe déjà !", HttpStatus.CONFLICT);
     }
     const hashedPassword = await this.hasPassword(dataall.mdp);
