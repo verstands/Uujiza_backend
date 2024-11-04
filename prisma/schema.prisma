@@ -53,6 +53,7 @@ model Produits {
   description  String      @db.Text
   id_pharmacie String
   pharmacie    Pharmacices @relation(fields: [id_pharmacie], references: [id])
+  Recherche    Recherche[]
 }
 
 model Pays {
@@ -60,6 +61,14 @@ model Pays {
   nom         String
   Villes      Villes[]
   Pharmacices Pharmacices[]
+}
+
+model Recherche {
+  id            String @id @default(cuid())
+  id_medicament String
+  date String
+
+  medicament Produits @relation(fields: [id_medicament], references: [id])
 }
 
 model Villes {
@@ -94,6 +103,6 @@ model Quartier {
 }
 
 model Slider {
-  id  String @id @default(cuid())
+  id   String @id @default(cuid())
   file String
 }

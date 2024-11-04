@@ -14,7 +14,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('agent')
 export class AgentController {
-  constructor(private readonly agentService: AgentService) {}
+  constructor(private readonly agentService: AgentService) { }
 
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -25,17 +25,25 @@ export class AgentController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   getAgent(@Param('id') id: string) {
-    return this.agentService.getAgent({ 
+    return this.agentService.getAgent({
       id,
     });
   }
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  update(@Param('id') id: string, @Body() body: { nom: string, prenom: string, email : string, telephone:string }) {
-    const { nom, prenom, email,  telephone } = body;
+  update(@Param('id') id: string, @Body() body: { nom: string, prenom: string, email: string, telephone: string }) {
+    const { nom, prenom, email, telephone } = body;
     return this.agentService.updateAgent({ id, nom, prenom, email, telephone });
   }
+
+  @Put('forgetpassword/forgetpassword/:email')
+  updateForgetPassword(@Param('email') email: string, @Body() body: { password: string }) {
+    const { password } = body;
+    return this.agentService.forgetpawword({ email, password });
+  }
+
+
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')

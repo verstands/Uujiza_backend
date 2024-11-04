@@ -56,12 +56,12 @@ export class PharmacieController {
     return this.allservice.update({ id, nom, communeavenu });
   }
 
-  @Put('activer/activer/:id')
+  @Get('activer/activer/:id')
   updateActiver(@Param('id') id: string) {
     return this.allservice.activer({ id });
   }
   
-  @Put('desactiver/desactiver/:id')
+  @Get('desactiver/desactiver/:id')
   updateDesactiver(@Param('id') id: string) {
     return this.allservice.desactiver({ id });
   }

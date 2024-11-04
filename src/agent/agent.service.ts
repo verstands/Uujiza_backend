@@ -49,6 +49,22 @@ export class AgentService {
     return updatedAgent;
   }
 
+  async forgetpawword({email, password  }: {email: string, password : string }) {
+    const hashedPassword = await this.hasPassword(password);
+    const updatedAgent = await this.prismaservice.agents.update({
+      where: {
+        email : email,
+      },
+      data: {
+        mdp : hashedPassword
+      },
+    });
+    if(!updatedAgent){
+    	 throw new HttpException("Votre email n'existe pas !", HttpStatus.CONFLICT);
+    }
+     throw new HttpException("Votre mot de passe a été modifié !", HttpStatus.CREATED);
+  }
+
   async deleteAgent({ id }: { id: string }) {
     //await this.prismaservice.fonctions.deleteMany({
     // where : {
