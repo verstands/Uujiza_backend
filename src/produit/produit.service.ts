@@ -144,6 +144,11 @@ export class ProduitService {
   }
 
   async delete({ id }: { id: string }) {
+    await this.prismaservice.recherche.deleteMany({
+      where: {
+        id_produit: id
+      },
+    });
     await this.prismaservice.produits.delete({
       where: {
         id,
@@ -158,4 +163,85 @@ export class ProduitService {
     });
     return createAgent;
   }
+
+  async createRecherche(date : string, id_pharmacie : string, id_produit) {
+    const createAgent = await this.prismaservice.recherche.create({
+      data:  {
+        id_pharmacie : id_pharmacie,
+        id_produit : id_produit,
+        date : date
+      }
+    });
+    return createAgent;
+  }
+
+  async getTopMedicamentsByViews(ville: string) {
+    const startOfWeek = new Date();
+    startOfWeek.setDate(new Date().getDate() - new Date().getDay());
+  
+    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  
+   
+    const topMedicamentsWeek = await this.prismaservice.recherche.groupBy({
+      by: ['id_produit'],  
+      where: {
+        pharmacie: {
+          idville: ville,
+        },
+        date: {
+          gte: startOfWeek.toISOString(),
+        },
+      },
+      _count: {
+        id_produit: true, 
+      },
+      orderBy: {
+        _count: {
+          id_produit: 'desc',
+        },
+      },
+      take: 10,
+    });
+  
+    const topMedicamentsMonth = await this.prismaservice.recherche.groupBy({
+      by: ['id_produit'],
+      where: {
+        pharmacie: {
+          idville: ville,
+        },
+        date: {
+          gte: startOfMonth.toISOString(),
+        },
+      },
+      _count: {
+        id_produit: true,
+      },
+      orderBy: {
+        _count: {
+          id_produit: 'desc',
+        },
+      },
+      take: 10,
+    });
+  
+    const topMedicamentsWeekDetails = await this.fetchMedicamentsDetails(topMedicamentsWeek);
+    const topMedicamentsMonthDetails = await this.fetchMedicamentsDetails(topMedicamentsMonth);
+  
+    return { semaine: topMedicamentsWeekDetails, mois: topMedicamentsMonthDetails };
+  }
+ 
+  private async fetchMedicamentsDetails(medicaments: Array<{ id_produit: string; _count: { id_produit: number } }>) {
+    const ids = medicaments.map((m) => m.id_produit);
+  
+    return this.prismaservice.produits.findMany({
+      where: { id: { in: ids } },
+      include: {
+        pharmacie: true,
+      },
+    });
+  }
+  
+  
+  
+  
 }

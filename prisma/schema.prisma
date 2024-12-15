@@ -38,11 +38,12 @@ model Pharmacices {
   Produits     Produits[]
   agentsId     String?
 
-  qurtier Quartier? @relation(fields: [id_quartier], references: [id])
-  agents  Agents?   @relation(fields: [agentsId], references: [id])
-  commune Commune?  @relation(fields: [idcommune], references: [id])
-  pays    Pays?     @relation(fields: [idpays], references: [id])
-  villes  Villes?   @relation(fields: [idville], references: [id])
+  qurtier   Quartier?   @relation(fields: [id_quartier], references: [id])
+  agents    Agents?     @relation(fields: [agentsId], references: [id])
+  commune   Commune?    @relation(fields: [idcommune], references: [id])
+  pays      Pays?       @relation(fields: [idpays], references: [id])
+  villes    Villes?     @relation(fields: [idville], references: [id])
+  Recherche Recherche[]
 }
 
 model Produits {
@@ -64,11 +65,13 @@ model Pays {
 }
 
 model Recherche {
-  id            String @id @default(cuid())
-  id_medicament String
-  date String
+  id           String @id @default(cuid())
+  id_pharmacie String
+  date         String
+  id_produit   String // Ajoutez ce champ si vous devez faire le lien avec les Produits
 
-  medicament Produits @relation(fields: [id_medicament], references: [id])
+  pharmacie Pharmacices @relation(fields: [id_pharmacie], references: [id])
+  produit   Produits    @relation(fields: [id_produit], references: [id]) // Relation avec Produits
 }
 
 model Villes {
@@ -105,4 +108,15 @@ model Quartier {
 model Slider {
   id   String @id @default(cuid())
   file String
+}
+
+model Apropos {
+  id   String @id @default(cuid())
+  description  String      @db.Text
+}
+
+model Contact {
+  id   String @id @default(cuid())
+  titre  String     
+  message  String      @db.Text
 }

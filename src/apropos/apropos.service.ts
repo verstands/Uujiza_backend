@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { PaysDto } from 'src/dto/pays.dto';
+import { AproposDto } from 'src/dto/apropos.dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
-export class PaysService {
-  constructor(private readonly prismaservice: PrismaService) {}
+export class AproposService {
+    constructor(private readonly prismaservice: PrismaService) {}
 
   async getAll() {
-    const getall = await this.prismaservice.pays.findMany({
+    const getall = await this.prismaservice.apropos.findMany({
       orderBy : {
         id : "desc"
       },
@@ -16,7 +16,7 @@ export class PaysService {
   }
 
   async getFind({ id }: { id: string }) {
-    const getid = await this.prismaservice.pays.findUnique({
+    const getid = await this.prismaservice.apropos.findUnique({
       where: {
         id,
       },
@@ -24,8 +24,8 @@ export class PaysService {
     return { data: getid };
   }
 
-  async update({ id, ...agentUpdate }: { id: string } & PaysDto) {
-    const updatedAgent = await this.prismaservice.pays.update({
+  async update({ id, ...agentUpdate }: { id: string } & AproposDto) {
+    const updatedAgent = await this.prismaservice.apropos.update({
       where: {
         id,
       },
@@ -37,7 +37,7 @@ export class PaysService {
   }
 
   async delete({ id }: { id: string }) {
-    await this.prismaservice.pays.delete({
+    await this.prismaservice.apropos.delete({
       where: {
         id,
       },
@@ -45,8 +45,8 @@ export class PaysService {
     return { message: 'pays supprimé avec success ' };
   }
 
-  async create(dataall: PaysDto) {
-    const createAgent = await this.prismaservice.pays.create({
+  async create(dataall: AproposDto) {
+    const createAgent = await this.prismaservice.apropos.create({
       data:  dataall
     });
     return createAgent;

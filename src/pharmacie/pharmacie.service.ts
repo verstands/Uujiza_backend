@@ -15,7 +15,8 @@ export class PharmacieService {
         qurtier: true,
         commune : true,
         villes : true,
-        pays : true
+        pays : true,
+        agents : true,
       }
     });
     return { data: getall };
@@ -49,6 +50,7 @@ export class PharmacieService {
     const getid = await this.prismaservice.pharmacices.findMany({
       where: {
         id_quartier: id,
+        id_user : '0'
       },
       include: {
         qurtier: true,
@@ -113,13 +115,33 @@ export class PharmacieService {
   
 
   async delete({ id }: { id: string }) {
+    // Étape 1 : Supprimer les recherches associées aux produits de la pharmacie
+    await this.prismaservice.recherche.deleteMany({
+      where: {
+        produit: {
+          id_pharmacie: id, // Filtrer par pharmacie via produit
+        },
+      },
+    });
+  
+    // Étape 2 : Supprimer les produits associés à la pharmacie
+    await this.prismaservice.produits.deleteMany({
+      where: {
+        id_pharmacie: id,
+      },
+    });
+  
+    // Étape 3 : Supprimer la pharmacie elle-même
     await this.prismaservice.pharmacices.delete({
       where: {
         id,
       },
     });
-    return { message: 'pharmacie supprimé avec success ' };
+  
+    return { message: 'Pharmacie et ses relations supprimées avec succès.' };
   }
+  
+  
 
   async create(dataall: PharmacieDto) {
     const pharmacies = await this.prismaservice.pharmacices.findMany({

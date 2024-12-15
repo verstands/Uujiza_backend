@@ -5,9 +5,9 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('produit')
 export class ProduitController {
-    constructor(private readonly allservice: ProduitService) {}
+  constructor(private readonly allservice: ProduitService) { }
 
-  
+
   @Get()
   get() {
     return this.allservice.getAll();
@@ -22,11 +22,26 @@ export class ProduitController {
 
   @Get('produitcommune/:id')
   getFindMedicamentQuartier(@Param('id') id: string) {
-    console.log("iiiiid",id)
+    console.log("iiiiid", id)
     return this.allservice.getFindMedicamentQuartier({
       id,
     });
   }
+
+  @Get('produitrecherche/:ville')
+  getSearcheMedicament(@Param('ville') ville: string) {
+    console.log("Route appelée avec ville :", ville);
+    return this.allservice.getTopMedicamentsByViews(ville);
+  }
+  
+
+  //@UseGuards(JwtAuthGuard)
+  @Post('produitrecherches')
+  async createRecherche(@Body() body: { date: string, id_pharmacie: string , id_produit: string}) {
+    const { date, id_pharmacie, id_produit } = body;
+    return await this.allservice.createRecherche(date, id_pharmacie, id_produit);
+  }
+
 
   @Get('/countmedicament/:id')
   getCountMedicament(@Param('id') id: string) {
@@ -51,10 +66,10 @@ export class ProduitController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  update(@Param('id') id: string, @Body() body: { nom: string, dosage: string, prix : string, description:string }) {
-    const { nom, dosage, prix,  description } = body;
+  update(@Param('id') id: string, @Body() body: { nom: string, dosage: string, prix: string, description: string }) {
+    const { nom, dosage, prix, description } = body;
     console.log(id);
-    return this.allservice.update({ id, nom, dosage, prix,  description});
+    return this.allservice.update({ id, nom, dosage, prix, description });
   }
 
   @UseGuards(JwtAuthGuard)

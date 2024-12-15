@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { PaysDto } from 'src/dto/pays.dto';
+import { ContatcDto } from 'src/dto/contact.dto';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
-export class PaysService {
-  constructor(private readonly prismaservice: PrismaService) {}
+export class ContactService {
+    constructor(private readonly prismaservice: PrismaService) {}
 
   async getAll() {
-    const getall = await this.prismaservice.pays.findMany({
+    const getall = await this.prismaservice.contact.findMany({
       orderBy : {
         id : "desc"
       },
@@ -16,7 +16,7 @@ export class PaysService {
   }
 
   async getFind({ id }: { id: string }) {
-    const getid = await this.prismaservice.pays.findUnique({
+    const getid = await this.prismaservice.contact.findUnique({
       where: {
         id,
       },
@@ -24,8 +24,8 @@ export class PaysService {
     return { data: getid };
   }
 
-  async update({ id, ...agentUpdate }: { id: string } & PaysDto) {
-    const updatedAgent = await this.prismaservice.pays.update({
+  async update({ id, ...agentUpdate }: { id: string } & ContatcDto) {
+    const updatedAgent = await this.prismaservice.contact.update({
       where: {
         id,
       },
@@ -37,7 +37,7 @@ export class PaysService {
   }
 
   async delete({ id }: { id: string }) {
-    await this.prismaservice.pays.delete({
+    await this.prismaservice.contact.delete({
       where: {
         id,
       },
@@ -45,8 +45,8 @@ export class PaysService {
     return { message: 'pays supprimé avec success ' };
   }
 
-  async create(dataall: PaysDto) {
-    const createAgent = await this.prismaservice.pays.create({
+  async create(dataall: ContatcDto) {
+    const createAgent = await this.prismaservice.contact.create({
       data:  dataall
     });
     return createAgent;

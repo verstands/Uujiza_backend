@@ -1,13 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { VilleService } from './ville.service';
-import { VilleDto } from 'src/dto/ville.dto';
+import { ContatcDto } from 'src/dto/contact.dto';
+import { PrismaService } from 'src/prisma.service';
+import { ContactService } from './contact.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
-@Controller('ville')
-export class VilleController {
-    constructor(private readonly allservice: VilleService) {}
+@Controller('contact')
+export class ContactController {
+    constructor(private readonly allservice: ContactService) {}
 
-  
   @Get()
   get() {
     return this.allservice.getAll();
@@ -20,16 +20,9 @@ export class VilleController {
     });
   }
 
-  @Get('pays/:id')
-  getFindOnePays(@Param('id') id: string) {
-    return this.allservice.getFindPays({
-      id,
-    });
-  }
-
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  update(@Param('id') id: string, @Body() agentUpdate: VilleDto) {
+  update(@Param('id') id: string, @Body() agentUpdate: ContatcDto) {
     return this.allservice.update({ id, ...agentUpdate });
   }
 
@@ -41,7 +34,7 @@ export class VilleController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() agendadto: VilleDto) {
+  async create(@Body() agendadto: ContatcDto) {
     return await this.allservice.create(agendadto);
   }
 }

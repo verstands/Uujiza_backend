@@ -9,6 +9,8 @@ import { LoggingModule } from './logging/logging.module';
 import { CommuneModule } from './commune/commune.module';
 import { QuartierModule } from './quartier/quartier.module';
 import { CarouselModule } from './carousel/carousel.module';
+import { AproposModule } from './apropos/apropos.module';
+import { ContactModule } from './contact/contact.module';
 
 
 @Module({
@@ -22,7 +24,9 @@ import { CarouselModule } from './carousel/carousel.module';
     LoggingModule,
     CommuneModule,
     QuartierModule,
-    CarouselModule
+    CarouselModule,
+    AproposModule,
+    ContactModule
   ],
 })
 export class AppModule {}
